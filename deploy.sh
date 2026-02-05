@@ -94,15 +94,15 @@ fi
 print_status ".env configured"
 
 # Step 7: Download models
-print_info "Step 7: Downloading models to $APP_DIR/backend/models (this may take 10-30 minutes)..."
+print_info "Step 7: Downloading models to $APP_DIR/backend/models (this may take 45-60 minutes)..."
 cd $APP_DIR/backend
 
 # Ensure models directory exists and set environment variable
 export MODELS_DIR="$APP_DIR/backend/models"
 mkdir -p "$MODELS_DIR"
 
-# Run model download script
-python scripts/download_models.py
+# Run safe model download script (downloads one at a time to avoid OOM)
+python scripts/download_models_safe.py
 
 if [ $? -eq 0 ]; then
     print_status "Models downloaded successfully to $MODELS_DIR"
