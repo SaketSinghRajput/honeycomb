@@ -40,8 +40,12 @@ print_status "System updated"
 
 # Step 2: Install dependencies
 print_info "Step 2: Installing dependencies..."
-sudo apt install -y python3 python3-venv python3-pip git curl wget
-sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
+# Add deadsnakes PPA for Python 3.11 (TTS requires Python <3.12)
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install -y python3.11 python3.11-venv python3.11-dev python3-pip git curl wget
+sudo apt install -y build-essential libssl-dev libffi-dev
 sudo apt install -y ffmpeg libsndfile1 libsndfile1-dev
 sudo apt install -y nginx certbot python3-certbot-nginx
 print_status "Dependencies installed"
@@ -67,7 +71,7 @@ print_status "Repository cloned/updated"
 # Step 5: Setup Python environment
 print_info "Step 5: Setting up Python virtual environment..."
 cd $APP_DIR
-python3 -m venv venv
+python3.11 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r backend/requirements.txt
@@ -117,7 +121,7 @@ After=network.target
 [Service]
 Type=notify
 User=$APP_USER
-WorkingDirectory=$APP_DIR
+WorkingDirectory=$APP_DIR/backend
 Environment="PATH=$APP_DIR/venv/bin"
 Environment="PYTHONUNBUFFERED=1"
 
