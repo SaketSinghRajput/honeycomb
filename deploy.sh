@@ -90,10 +90,22 @@ fi
 print_status ".env configured"
 
 # Step 7: Download models
-print_info "Step 7: Downloading models (this may take 10-30 minutes)..."
-cd backend
+print_info "Step 7: Downloading models to $APP_DIR/backend/models (this may take 10-30 minutes)..."
+cd $APP_DIR/backend
+
+# Ensure models directory exists and set environment variable
+export MODELS_DIR="$APP_DIR/backend/models"
+mkdir -p "$MODELS_DIR"
+
+# Run model download script
 python scripts/download_models.py
-print_status "Models downloaded"
+
+if [ $? -eq 0 ]; then
+    print_status "Models downloaded successfully to $MODELS_DIR"
+else
+    print_error "Model download failed"
+    exit 1
+fi
 
 # Step 8: Create systemd service
 print_info "Step 8: Creating systemd service..."
