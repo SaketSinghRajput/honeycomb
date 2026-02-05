@@ -1,0 +1,74 @@
+# GPU-specific Dockerfile for Agentic AI Scam Honeypot Backend
+# Uses NVIDIA CUDA runtime base and supports installing a CUDA-enabled
+# PyTorch wheel provided via build-arg `TORCH_WHEEL_URL`.
+
+FROM python:3.11-slim-bullseye as builder
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install python deps (without heavy CUDA wheel by default)
+COPY requirements.txt .
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install -r requirements.txt
+
+# Runtime image based on NVIDIA CUDA runtime
+FROM nvidia/cuda:12.2.0-runtime-ubuntu22.04
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH=/app
+
+# Install runtime packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 python3.11-venv python3.11-distutils python3-pip \
+    ffmpeg libsndfile1 curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtualenv and copy packages from builder
+RUN python3.11 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY --from=builder /opt/venv /opt/venv
+
+# Install CUDA-enabled PyTorch wheel if provided at build time
+# Example build: docker build -t scam-honeypot:gpu -f Dockerfile.gpu --build-arg TORCH_WHEEL_URL="https://download.pytorch.org/whl/cu122/torch-...whl" .
+ARG TORCH_WHEEL_URL=""
+RUN if [ -n "$TORCH_WHEEL_URL" ]; then \
+      pip install "$TORCH_WHEEL_URL" || echo "Failed to install TORCH_WHEEL_URL"; \
+    else \
+      echo "No TORCH_WHEEL_URL provided; install CUDA PyTorch wheel at build time via --build-arg"; \
+    fi
+
+# App user
+RUN useradd -m -u 1000 -s /bin/bash appuser
+
+WORKDIR /app
+COPY --chown=appuser:appuser . .
+
+RUN mkdir -p models && chown -R appuser:appuser models
+
+# Copy entrypoint and make executable
+COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+ENTRYPOINT ["/app/entrypoint.sh"]

@@ -1,0 +1,29 @@
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# AI/ML Core
+torch==2.2.0
+transformers==4.37.0
+openai-whisper==20231117
+
+# NLP & Speech
+spacy==3.7.2
+TTS==0.22.0
+
+# Utilities
+numpy==1.26.3
+soundfile==0.12.1
+librosa==0.10.1
+
+# Model Downloading
+huggingface-hub==0.20.2
+requests==2.31.0
+tqdm==4.66.1
+
+# Logging enhancement
+colorlog==6.8.0

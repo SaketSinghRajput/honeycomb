@@ -1,0 +1,122 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Models (LARGE FILES - DO NOT COMMIT)
+backend/models/
+models/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Voice/Audio files
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.aac
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.postgres
+
+# Credentials and secrets
+*secret*
+*token*
+*key*
+.aws/
+credentials.json
+
+# OS
+.DS_Store
+Thumbs.db
+.idea/
+
+# Coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Build
+*.o
+*.a
+*.dylib
+*.so
+
+# Node (if frontend exists)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Cache
+.cache/
+__pycache__/
+*.cache
+
+# Application specific
+backend/logs/
+backend/temp/
+backend/cache/
+*.pid
