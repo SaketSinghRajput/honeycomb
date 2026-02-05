@@ -40,7 +40,7 @@ print_status "System updated"
 
 # Step 2: Install dependencies
 print_info "Step 2: Installing dependencies..."
-sudo apt install -y python3.11 python3.11-venv python3-pip git curl wget
+sudo apt install -y python3 python3-venv python3-pip git curl wget
 sudo apt install -y build-essential libssl-dev libffi-dev python3-dev
 sudo apt install -y ffmpeg libsndfile1 libsndfile1-dev
 sudo apt install -y nginx certbot python3-certbot-nginx
@@ -67,7 +67,7 @@ print_status "Repository cloned/updated"
 # Step 5: Setup Python environment
 print_info "Step 5: Setting up Python virtual environment..."
 cd $APP_DIR
-python3.11 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r backend/requirements.txt
