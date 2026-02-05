@@ -13,7 +13,7 @@ openai-whisper==20231117
 
 # NLP & Speech
 spacy==3.7.2
-TTS==0.22.0
+TTS>=0.22.0
 
 # Utilities
 numpy==1.26.3
